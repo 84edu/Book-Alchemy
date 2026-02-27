@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>My library!</title>
+    </head>
+    <body>
+        <div class="sorting">
+            <form action="/" method="GET">
+                <label for="sort">Sort by:</label>
+                <select id="sort" name="sort" onchange="this.form.submit()">
+                    <option value="title" {% if current_sort == "title" %} selected {% endif %}>Book title</option>
+                    <option value="name" {% if current_sort == "name" %} selected {% endif %}>Author name</option>
+                    <option value="year" {% if current_sort == "year" %} selected {% endif %}>publication year</option>
+                </select>
+                <noscript><input type="submit" value="Sort"></noscript>
+            </form>
+        </div>
+        {% for book in books %}
+        <div class="book-card">
+            <h3>{{ book.title }}</h3>
+            <p>By: {{ book.author.name }}</p>
+
+            <img src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg"
+                alt="Cover for {{ book.title }}"
+                class="book-cover">
+        </div>
+        {% endfor %}
+    </body>
+</html>
