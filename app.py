@@ -1,4 +1,3 @@
-from docutils.nodes import authors
 from flask import Flask, flash, redirect, render_template, request, url_for
 from flask_sqlalchemy import SQLAlchemy
 import os
