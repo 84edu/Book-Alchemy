@@ -46,6 +46,9 @@
                         <h3>{{ book.title }}</h3>
                         <p>from: {{ book.author.name }}</p>
                         <img src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg" class="book-cover">
+                        <form action="/book/{{ book.id }}/delete" method="POST" onsubmit="return confirm('Are you sure you want to delete this book?');">
+                            <button type="submit" style="color: red;">Delete Book</button>
+                        </form>
                     </div>
                 {% endfor %}
 
@@ -55,6 +58,9 @@
                         <h3>{{ book.title }}</h3>
                         <p>from: {{ book.author.name }}</p>
                         <img src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg" class="book-cover">
+                        <form action="/book/{{ book.id }}/delete" method="POST" onsubmit="return confirm('Are you sure you want to delete this book?');">
+                            <button type="submit" style="color: red;">Delete Book</button>
+                        </form>
                     </div>
                 {% endfor %}
             {% endif %}

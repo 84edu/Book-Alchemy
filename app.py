@@ -77,6 +77,24 @@ def add_book():
         return redirect(url_for("add_book"))
 
 
+@app.route('/book/<int:book_id>/delete', methods=['POST'])
+def delete_book(book_id):
+    # Finding the book
+    book = Book.query.get_or_404(book_id)
+
+    # Saving the author name
+    author = book.author
+    book_title = book.title
+
+    # Deleting the book
+    db.session.delete(book)
+    db.session.commit()
+
+    flash(f"Book '{book_title}' deleted successfully!")
+
+    return redirect(url_for("home"))
+
+
 @app.route('/')
 def home():
     sort_by = request.args.get('sort', 'title')
