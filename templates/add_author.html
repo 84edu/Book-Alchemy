@@ -3,33 +3,63 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>Add a new author!</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
     </head>
     <body>
-        <div>
-            {% with messages = get_flashed_messages() %}
-                  {% if messages %}
-                        <ul class="flashes">
-                        {% for message in messages %}
-                          <li style="color: green;">{{ message }}</li>
-                        {% endfor %}
-                        </ul>
-                  {% endif %}
-            {% endwith %}
-         </div>
+        <div class="top-bar">
+            <div class="search">
+                <form action="/" method="GET">
+                    <label for="search">Search:</label>
+                    <input type="search" name="search" placeholder="Search">
+                    <button type="submit">Search</button>
+                </form>
+            </div>
 
-        <form action="{{ url_for('add_author') }}" method="POST">
-            <label for="name">Author Name:</label>
-            <input type="text" id="name" name="name" required><br><br>
+            <div class="nav-buttons">
+                <a href="{{ url_for('add_book') }}" class="btn-nav">Add Book</a>
+                <a href="{{ url_for('add_author') }}" class="btn-nav">Add Author</a>
+            </div>
 
-            <label for="birthdate">Birthdate:</label>
-            <input type="date" id="birthdate" name="birthdate" required><br><br>
-            <label for="date_of_death">Date of Death:</label>
-            <input type="date" id="date_of_death" name="date_of_death"><br><br>
-            <input type="submit" value="Add Author">
-            <a href="{{ url_for('home') }}">Cancel and return to home page</a>
-        </form>
+            <div class="sorting">
+                <form action="/" method="GET">
+                    <label for="sort">Sorted by:</label>
+                    <select id="sort" name="sort" onchange="this.form.submit()">
+                        <option value="title">Book title</option>
+                        <option value="name">Author</option>
+                        <option value="year">Publication year</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+        <div class="form-container">
+            <h1>Add Author</h1>
+            <div>
+                {% with messages = get_flashed_messages() %}
+                      {% if messages %}
+                            <ul class="flashes">
+                            {% for message in messages %}
+                              <li>{{ message }}</li>
+                            {% endfor %}
+                            </ul>
+                      {% endif %}
+                {% endwith %}
+             </div>
 
+            <form action="{{ url_for('add_author') }}" method="POST">
+                <label for="name">Author Name:</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="birthdate">Birthdate:</label>
+                <input type="date" id="birthdate" name="birthdate" required>
+
+                <label for="date_of_death">Date of Death:</label>
+                <input type="date" id="date_of_death" name="date_of_death">
+
+                <input type="submit" value="Add Author">
+                <a href="{{ url_for('home') }}">Cancel and return to home page</a>
+            </form>
+        </div>
     </body>
 </html>

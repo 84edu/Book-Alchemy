@@ -5,65 +5,64 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>My library!</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
     </head>
     <body>
-        <div class="sorting">
-            <form action="/" method="GET">
-                {% if search_query %}
-                    <input type="hidden" name="search" value="{{ search_query }}">
-                {% endif %}
-                <label for="sort">Sorted by:</label>
-                <select id="sort" name="sort" onchange="this.form.submit()">
-                    <option value="title" {% if current_sort == "title" %} selected {% endif %}>Book title</option>
-                    <option value="name" {% if current_sort == "name" %} selected {% endif %}>Author</option>
-                    <option value="year" {% if current_sort == "year" %} selected {% endif %}>Publication year</option>
-                </select>
-            </form>
-        </div>
-        <div class="search">
-            <form action="/" method="GET">
-                <label for="search">Search:</label>
-                <input type="search" name="search" placeholder="Search">
-                <button type="submit">Search</button>
-            </form>
-        </div>
         <div class="content">
-            {% if error_message %}
-                <p style="color: red; font-weight: bold;">{{ error_message }}</p>
-                <p><a href="/">← back to the whole library</a></p>
 
-            {% elif search_query %}
-                <h3>Search result(s) for: "{{ search_query }}"</h3>
+            <div class="top-bar">
+                <div class="search">
+                    <form action="/" method="GET">
+                        <label for="search">Search:</label>
+                        <input type="search" name="search" placeholder="Search" value="{{ search_query }}">
+                        <button type="submit">Search</button>
+                    </form>
+                </div>
 
-                {% if not books %}
-                    <p>Sorry, no books matched your search criteria. 🧐</p>
+                <div class="nav-buttons">
+                    <a href="{{ url_for('add_book') }}" class="btn-nav">Add Book</a>
+                    <a href="{{ url_for('add_author') }}" class="btn-nav">Add Author</a>
+                </div>
+
+                <div class="sorting">
+                    <form action="/" method="GET">
+                        {% if search_query %}
+                            <input type="hidden" name="search" value="{{ search_query }}">
+                        {% endif %}
+                        <label for="sort">Sorted by:</label>
+                        <select id="sort" name="sort" onchange="this.form.submit()">
+                            <option value="title" {% if current_sort == "title" %} selected {% endif %}>Book title</option>
+                            <option value="name" {% if current_sort == "name" %} selected {% endif %}>Author</option>
+                            <option value="year" {% if current_sort == "year" %} selected {% endif %}>Publication year</option>
+                        </select>
+                    </form>
+                </div>
+            </div>
+
+            <div class="books-container">
+                {% if error_message %}
+                    <p style="color: red; font-weight: bold;">{{ error_message }}</p>
+                    <p><a href="/">← Back to the whole library</a></p>
+                {% elif search_query %}
+                    <h3>Search result(s) For: "{{ search_query }}"</h3>
+                    {% if not books %}
+                        <p>Sorry, no books matched your search criteria. 🧐</p>
+                    {% endif %}
+                    <p><a href="/">← Back to the whole library</a></p>
                 {% endif %}
 
-                <p><a href="/">← back to the whole library</a></p>
-
                 {% for book in books %}
                     <div class="book-card">
                         <h3>{{ book.title }}</h3>
-                        <p>from: {{ book.author.name }}</p>
+                        <p>From: {{ book.author.name }}</p>
                         <img src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg" class="book-cover">
                         <form action="/book/{{ book.id }}/delete" method="POST" onsubmit="return confirm('Are you sure you want to delete this book?');">
-                            <button type="submit" style="color: red;">Delete Book</button>
+                            <button type="submit">Delete Book</button>
                         </form>
                     </div>
                 {% endfor %}
-
-            {% else %}
-                {% for book in books %}
-                    <div class="book-card">
-                        <h3>{{ book.title }}</h3>
-                        <p>from: {{ book.author.name }}</p>
-                        <img src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg" class="book-cover">
-                        <form action="/book/{{ book.id }}/delete" method="POST" onsubmit="return confirm('Are you sure you want to delete this book?');">
-                            <button type="submit" style="color: red;">Delete Book</button>
-                        </form>
-                    </div>
-                {% endfor %}
-            {% endif %}
+            </div>
         </div>
     </body>
 </html>

@@ -3,40 +3,70 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>Add a new book!</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
     </head>
     <body>
-        <div>
-            {% with messages = get_flashed_messages() %}
-                  {% if messages %}
-                        <ul class="flashes">
-                        {% for message in messages %}
-                          <li style="color: green;">{{ message }}</li>
-                        {% endfor %}
-                        </ul>
-                  {% endif %}
-            {% endwith %}
-         </div>
+        <div class="top-bar">
+            <div class="search">
+                <form action="/" method="GET">
+                    <label for="search">Search:</label>
+                    <input type="search" name="search" placeholder="Search">
+                    <button type="submit">Search</button>
+                </form>
+            </div>
 
-        <form action="{{ url_for('add_book') }}" method="POST">
-            <label for="title">Book Title:</label>
-            <input type="text" id="title" name="title" required><br><br>
+            <div class="nav-buttons">
+                <a href="{{ url_for('add_book') }}" class="btn-nav">Add Book</a>
+                <a href="{{ url_for('add_author') }}" class="btn-nav">Add Author</a>
+            </div>
 
-            <label for="author">Select the author:</label>
-            <select id="author" name="author" required>
-                {% for author in authors %}
-                    <option value="{{ author.id }}">{{ author.name }}</option>
-                {% endfor %}
-            </select>
+            <div class="sorting">
+                <form action="/" method="GET">
+                    <label for="sort">Sorted by:</label>
+                    <select id="sort" name="sort" onchange="this.form.submit()">
+                        <option value="title">Book title</option>
+                        <option value="name">Author</option>
+                        <option value="year">Publication year</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+        <div class="form-container">
+            <h1>Add Book</h1>
+            <div>
+                {% with messages = get_flashed_messages() %}
+                      {% if messages %}
+                            <ul class="flashes">
+                            {% for message in messages %}
+                                <li>{{ message }}</li>
+                            {% endfor %}
+                            </ul>
+                      {% endif %}
+                {% endwith %}
+             </div>
 
-            <label for="isbn">ISBN:</label>
-            <input type="text" id="isbn" name="isbn" required><br><br>
-            <label for="publication_year">Publication Year:</label>
-            <input type="text" id="publication_year" name="publication_year" required><br><br>
-            <input type="submit" value="Add Book">
-            <a href="{{ url_for('home') }}">Cancel and return to home page</a>
-        </form>
+            <form action="{{ url_for('add_book') }}" method="POST">
+                <label for="title">Book Title:</label>
+                <input type="text" id="title" name="title" required>
 
+                <label for="author">Select the author:</label>
+                <select id="author" name="author" required>
+                    {% for author in authors %}
+                        <option value="{{ author.id }}">{{ author.name }}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="isbn">ISBN:</label>
+                <input type="text" id="isbn" name="isbn" required>
+
+                <label for="publication_year">Publication Year:</label>
+                <input type="text" id="publication_year" name="publication_year" required>
+
+                <input type="submit" value="Add Book">
+                <a href="{{ url_for('home') }}">Cancel and return to home page</a>
+            </form>
+        </div>
     </body>
 </html>

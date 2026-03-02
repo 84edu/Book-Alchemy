@@ -83,7 +83,7 @@ def delete_book(book_id):
     book = Book.query.get_or_404(book_id)
 
     # Saving the author name
-    author = book.author
+    #author = book.author
     book_title = book.title
 
     # Deleting the book
@@ -108,7 +108,17 @@ def home():
             error_message = "You must enter a keyword to use the search function."
             books = []
         else:
-            query = query.filter(Book.title.ilike(f"%{search_query}%"))
+            query = query.filter(
+                Book.title.ilike(f"%{search_query}%") |
+                Book.isbn.ilike(f"%{search_query}%")
+            )
+            if sort_by == 'name':
+                query = query.order_by(Author.name)
+            elif sort_by == 'year':
+                query = query.order_by(Book.publication_year)
+            else:
+                query = query.order_by(Book.title)
+
             books = query.all()
     else:
         # Normal sorting.
