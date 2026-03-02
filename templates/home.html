@@ -9,24 +9,55 @@
     <body>
         <div class="sorting">
             <form action="/" method="GET">
-                <label for="sort">Sort by:</label>
+                {% if search_query %}
+                    <input type="hidden" name="search" value="{{ search_query }}">
+                {% endif %}
+                <label for="sort">Sorted by:</label>
                 <select id="sort" name="sort" onchange="this.form.submit()">
                     <option value="title" {% if current_sort == "title" %} selected {% endif %}>Book title</option>
-                    <option value="name" {% if current_sort == "name" %} selected {% endif %}>Author name</option>
-                    <option value="year" {% if current_sort == "year" %} selected {% endif %}>publication year</option>
+                    <option value="name" {% if current_sort == "name" %} selected {% endif %}>Author</option>
+                    <option value="year" {% if current_sort == "year" %} selected {% endif %}>Publication year</option>
                 </select>
-                <noscript><input type="submit" value="Sort"></noscript>
             </form>
         </div>
-        {% for book in books %}
-        <div class="book-card">
-            <h3>{{ book.title }}</h3>
-            <p>By: {{ book.author.name }}</p>
-
-            <img src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg"
-                alt="Cover for {{ book.title }}"
-                class="book-cover">
+        <div class="search">
+            <form action="/" method="GET">
+                <label for="search">Search:</label>
+                <input type="search" name="search" placeholder="Search">
+                <button type="submit">Search</button>
+            </form>
         </div>
-        {% endfor %}
+        <div class="content">
+            {% if error_message %}
+                <p style="color: red; font-weight: bold;">{{ error_message }}</p>
+                <p><a href="/">← back to the whole library</a></p>
+
+            {% elif search_query %}
+                <h3>Search result(s) for: "{{ search_query }}"</h3>
+
+                {% if not books %}
+                    <p>Sorry, no books matched your search criteria. 🧐</p>
+                {% endif %}
+
+                <p><a href="/">← back to the whole library</a></p>
+
+                {% for book in books %}
+                    <div class="book-card">
+                        <h3>{{ book.title }}</h3>
+                        <p>from: {{ book.author.name }}</p>
+                        <img src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg" class="book-cover">
+                    </div>
+                {% endfor %}
+
+            {% else %}
+                {% for book in books %}
+                    <div class="book-card">
+                        <h3>{{ book.title }}</h3>
+                        <p>from: {{ book.author.name }}</p>
+                        <img src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg" class="book-cover">
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
     </body>
 </html>

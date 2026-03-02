@@ -17,6 +17,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = \
 
 db.init_app(app)
 
+
 # with app.app_context():
 #     db.create_all()
 
@@ -79,15 +80,33 @@ def add_book():
 @app.route('/')
 def home():
     sort_by = request.args.get('sort', 'title')
+    search_query = request.args.get('search', '')
+    error_message = None
 
-    if sort_by == 'name':
-        books = Book.query.join(Author).order_by(Author.name).all()
-    elif sort_by == 'year':
-        books = Book.query.order_by(Book.publication_year).all()
+    query = Book.query.join(Author)
+
+    if 'search' in request.args:
+        if not search_query.strip():
+            error_message = "You must enter a keyword to use the search function."
+            books = []
+        else:
+            query = query.filter(Book.title.ilike(f"%{search_query}%"))
+            books = query.all()
     else:
-        books = Book.query.order_by(Book.title).all()
+        # Normal sorting.
+        if sort_by == 'name':
+            query = query.order_by(Author.name)
+        elif sort_by == 'year':
+            query = query.order_by(Book.publication_year)
+        else:
+            query = query.order_by(Book.title)
+        books = query.all()
 
-    return render_template("home.html", books=books, current_sort=sort_by)
+    return render_template("home.html",
+                           books=books,
+                           current_sort=sort_by,
+                           search_query=search_query,
+                           error_message=error_message)
 
 
 if __name__ == "__main__":
